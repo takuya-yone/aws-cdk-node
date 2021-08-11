@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "format": "prettier --write 'bin/*.{ts,tsx}' && prettier --write 'lib/*.{ts,tsx}'"
+    "format": "prettier --write './**/*.ts'"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.118.0",
