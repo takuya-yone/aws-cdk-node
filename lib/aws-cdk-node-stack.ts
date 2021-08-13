@@ -1,5 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
+import * as rds from '@aws-cdk/aws-rds';
 
 export class AwsCdkNodeStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -61,6 +62,17 @@ export class AwsCdkNodeStack extends cdk.Stack {
       ec2.Port.allTraffic()
     );
 
-    ////////////////// ////////////////// //////////////////
+    ////////////////// Private Subnet Group for RDS //////////////////
+    
+    const rdsSubnetGroup = new rds.SubnetGroup(this,'RdsSubnetGroup',{
+      description:'RdsSubnetGroup',
+      vpc: vpc,
+      vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.ISOLATED })
+    });
+    
+    //////////////////  //////////////////   //////////////////
+
+    
+    
   }
 }
