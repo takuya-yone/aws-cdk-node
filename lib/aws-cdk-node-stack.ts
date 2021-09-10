@@ -24,7 +24,27 @@ export class AwsCdkNodeStack extends cdk.Stack {
       ],
     });
 
+    //     const subnetSelection: ec2.SubnetSelection = {
+    //     subnetType: ec2.SubnetType.ISOLATED, onePerAz: true
+    // };
+
+    // const aaa = ec2.SubnetSelection(ec2.SubnetType.ISOLATED,true)
+    const publicSubnets = vpc.selectSubnets({
+      subnetType: ec2.SubnetType.PUBLIC,
+    });
+
+    const privateSubnets = vpc.selectSubnets({
+      subnetType: ec2.SubnetType.ISOLATED,
+    });
+
+    // add gateway s3 endpoint to private subnet
+    vpc.addGatewayEndpoint('S3GatewayEndpoint', {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+      subnets: [privateSubnets],
+    });
+
     ////////////////// Public Security Group //////////////////
+
 
     const proxyIP1 = '0.0.0.0/32';
     const proxyIP2 = '0.0.0.0/32';
@@ -58,21 +78,22 @@ export class AwsCdkNodeStack extends cdk.Stack {
 
     // Ingress Rule
     privateSecurityGroup.addIngressRule(
+      privateSecurityGroup,
+      ec2.Port.allTraffic()
+    );
+    privateSecurityGroup.addIngressRule(
       ec2.Peer.ipv4(vpcCidr),
       ec2.Port.allTraffic()
     );
 
     ////////////////// Private Subnet Group for RDS //////////////////
-    
-    const rdsSubnetGroup = new rds.SubnetGroup(this,'RdsSubnetGroup',{
-      description:'RdsSubnetGroup',
-      vpc: vpc,
-      vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.ISOLATED })
-    });
-    
-    //////////////////  //////////////////   //////////////////
 
-    
-    
+    const rdsSubnetGroup = new rds.SubnetGroup(this, 'RdsSubnetGroup', {
+      description: 'RdsSubnetGroup',
+      vpc: vpc,
+      vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.ISOLATED }),
+    });
+
+    //////////////////  //////////////////   //////////////////
   }
 }
