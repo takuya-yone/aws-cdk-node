@@ -29,21 +29,21 @@ export class AwsCdkNodeStack extends cdk.Stack {
     const proxyIP1 = '0.0.0.0/32';
     const proxyIP2 = '0.0.0.0/32';
 
-    // public security group
+    //// public security group
     const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
       vpc: vpc,
       allowAllOutbound: true,
       securityGroupName: 'PublicSG',
     });
 
-    // private security group
+    //// private security group
     const privateSecurityGroup = new ec2.SecurityGroup(this, 'PrivateSG', {
       vpc: vpc,
       allowAllOutbound: true,
       securityGroupName: 'PrivateSG',
     });
 
-    // public security group Rule
+    //// public security group Rule
     publicSecurityGroup.addIngressRule(
       publicSecurityGroup,
       ec2.Port.allTraffic()
@@ -61,7 +61,7 @@ export class AwsCdkNodeStack extends cdk.Stack {
       ec2.Port.allTraffic()
     );
 
-    // private security group Rule
+    //// private security group Rule
     privateSecurityGroup.addIngressRule(
       privateSecurityGroup,
       ec2.Port.allTraffic()
@@ -82,36 +82,47 @@ export class AwsCdkNodeStack extends cdk.Stack {
 
     //////////////////  //////////////////   //////////////////
 
-    // add gateway s3 endpoint to private subnet
-    vpc.addGatewayEndpoint('S3GatewayEndpoint', {
+    //// add gateway s3 endpoint to private subnet
+    const S3GatewayEndpoint = vpc.addGatewayEndpoint('S3GatewayEndpoint', {
       service: ec2.GatewayVpcEndpointAwsService.S3,
       subnets: [{ subnetType: ec2.SubnetType.ISOLATED }],
     });
 
-    // connect to ecr from isolated
-    vpc.addInterfaceEndpoint('ECRInterfaceEndpoint', {
-      privateDnsEnabled: true,
-      securityGroups: [privateSecurityGroup],
-      service: ec2.InterfaceVpcEndpointAwsService.ECR,
-      subnets: {
-        subnetType: ec2.SubnetType.ISOLATED,
-      },
-    });
-    // connect to cwlogs from isolated
-    vpc.addInterfaceEndpoint('CWLogsInterfaceEndpoint', {
-      privateDnsEnabled: true,
-      securityGroups: [privateSecurityGroup],
-      service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
-      subnets: {
-        subnetType: ec2.SubnetType.ISOLATED,
-      },
-    });
-    // vpc.addInterfaceEndpoint('ECRInterfaceEndpoint', {
-    //   securityGroups: [privateSecurityGroup],
-    //   service: ec2.InterfaceVpcEndpointAwsService.ECR,
-    //   subnets: {
-    //     subnetType: ec2.SubnetType.ISOLATED,
-    //   },
-    // });
+    // //// connect to ecr from isolated
+    // const ECRApiInterfaceEndpoint = vpc.addInterfaceEndpoint(
+    //   'ECRApiInterfaceEndpoint',
+    //   {
+    //     // privateDnsEnabled: true,
+    //     securityGroups: [privateSecurityGroup],
+    //     service: ec2.InterfaceVpcEndpointAwsService.ECR,
+    //     subnets: {
+    //       subnetType: ec2.SubnetType.ISOLATED,
+    //     },
+    //   }
+    // );
+    // //// connect to ecr from isolated
+    // const ECRDkrInterfaceEndpoint = vpc.addInterfaceEndpoint(
+    //   'ECRDkrInterfaceEndpoint',
+    //   {
+    //     // privateDnsEnabled: true,
+    //     securityGroups: [privateSecurityGroup],
+    //     service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
+    //     subnets: {
+    //       subnetType: ec2.SubnetType.ISOLATED,
+    //     },
+    //   }
+    // );
+    // //// connect to cwlogs from isolated
+    // const CWLogsInterfaceEndpoint = vpc.addInterfaceEndpoint(
+    //   'CWLogsInterfaceEndpoint',
+    //   {
+    //     // privateDnsEnabled: true,
+    //     securityGroups: [privateSecurityGroup],
+    //     service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
+    //     subnets: {
+    //       subnetType: ec2.SubnetType.ISOLATED,
+    //     },
+    //   }
+    // );
   }
 }
