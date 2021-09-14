@@ -24,76 +24,94 @@ export class AwsCdkNodeStack extends cdk.Stack {
       ],
     });
 
-    //     const subnetSelection: ec2.SubnetSelection = {
-    //     subnetType: ec2.SubnetType.ISOLATED, onePerAz: true
-    // };
-
-    // const aaa = ec2.SubnetSelection(ec2.SubnetType.ISOLATED,true)
-    const publicSubnets = vpc.selectSubnets({
-      subnetType: ec2.SubnetType.PUBLIC,
-    });
-
-    const privateSubnets = vpc.selectSubnets({
-      subnetType: ec2.SubnetType.ISOLATED,
-    });
-
-    // add gateway s3 endpoint to private subnet
-    vpc.addGatewayEndpoint('S3GatewayEndpoint', {
-      service: ec2.GatewayVpcEndpointAwsService.S3,
-      subnets: [privateSubnets],
-    });
-
-    ////////////////// Public Security Group //////////////////
-
+    //////////////////  Security Group //////////////////
 
     const proxyIP1 = '0.0.0.0/32';
     const proxyIP2 = '0.0.0.0/32';
 
-    const pubSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
+    // public security group
+    const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
       vpc: vpc,
       allowAllOutbound: true,
       securityGroupName: 'PublicSG',
     });
 
-    // Ingress Rule
-    pubSecurityGroup.addIngressRule(pubSecurityGroup, ec2.Port.allTraffic());
-    pubSecurityGroup.addIngressRule(
-      ec2.Peer.ipv4(proxyIP1),
-      ec2.Port.allTraffic()
-    );
-    pubSecurityGroup.addIngressRule(
-      ec2.Peer.ipv4(proxyIP2),
-      ec2.Port.allTraffic()
-    );
-
-    ////////////////// ////////////////// //////////////////
-
-    ////////////////// Public Security Group //////////////////
-
+    // private security group
     const privateSecurityGroup = new ec2.SecurityGroup(this, 'PrivateSG', {
       vpc: vpc,
       allowAllOutbound: true,
       securityGroupName: 'PrivateSG',
     });
 
-    // Ingress Rule
+    // public security group Rule
+    publicSecurityGroup.addIngressRule(
+      publicSecurityGroup,
+      ec2.Port.allTraffic()
+    );
+    publicSecurityGroup.addIngressRule(
+      ec2.Peer.ipv4(proxyIP1),
+      ec2.Port.allTraffic()
+    );
+    publicSecurityGroup.addIngressRule(
+      ec2.Peer.ipv4(proxyIP2),
+      ec2.Port.allTraffic()
+    );
+    publicSecurityGroup.addIngressRule(
+      privateSecurityGroup,
+      ec2.Port.allTraffic()
+    );
+
+    // private security group Rule
     privateSecurityGroup.addIngressRule(
       privateSecurityGroup,
       ec2.Port.allTraffic()
     );
     privateSecurityGroup.addIngressRule(
-      ec2.Peer.ipv4(vpcCidr),
+      publicSecurityGroup,
       ec2.Port.allTraffic()
     );
+    ////////////////// ////////////////// //////////////////
 
     ////////////////// Private Subnet Group for RDS //////////////////
 
     const rdsSubnetGroup = new rds.SubnetGroup(this, 'RdsSubnetGroup', {
       description: 'RdsSubnetGroup',
       vpc: vpc,
-      vpcSubnets: vpc.selectSubnets({ subnetType: ec2.SubnetType.ISOLATED }),
+      vpcSubnets: { subnetType: ec2.SubnetType.ISOLATED },
     });
 
     //////////////////  //////////////////   //////////////////
+
+    // add gateway s3 endpoint to private subnet
+    vpc.addGatewayEndpoint('S3GatewayEndpoint', {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+      subnets: [{ subnetType: ec2.SubnetType.ISOLATED }],
+    });
+
+    // connect to ecr from isolated
+    vpc.addInterfaceEndpoint('ECRInterfaceEndpoint', {
+      privateDnsEnabled: true,
+      securityGroups: [privateSecurityGroup],
+      service: ec2.InterfaceVpcEndpointAwsService.ECR,
+      subnets: {
+        subnetType: ec2.SubnetType.ISOLATED,
+      },
+    });
+    // connect to cwlogs from isolated
+    vpc.addInterfaceEndpoint('CWLogsInterfaceEndpoint', {
+      privateDnsEnabled: true,
+      securityGroups: [privateSecurityGroup],
+      service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
+      subnets: {
+        subnetType: ec2.SubnetType.ISOLATED,
+      },
+    });
+    // vpc.addInterfaceEndpoint('ECRInterfaceEndpoint', {
+    //   securityGroups: [privateSecurityGroup],
+    //   service: ec2.InterfaceVpcEndpointAwsService.ECR,
+    //   subnets: {
+    //     subnetType: ec2.SubnetType.ISOLATED,
+    //   },
+    // });
   }
 }
