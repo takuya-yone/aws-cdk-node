@@ -1,0 +1,169 @@
+digraph "Diagram" {
+  splines = "ortho";
+  pad = "1.0";
+  nodesep = "0.60";
+  ranksep = "0.75";
+  fontname = "Sans-Serif";
+  fontsize = "15";
+  dpi = "200";
+  rankdir = "BT";
+  compound = "true";
+  fontcolor = "#222222";
+  edge [
+    color = "#D5871488",
+    penwidth = 2,
+    arrowhead = "dot",
+    arrowtail = "dot",
+  ];
+  node [
+    shape = "box",
+    style = "rounded",
+    fixedsize = true,
+    width = 1.7,
+    height = 1.7,
+    labelloc = "c",
+    imagescale = true,
+    fontname = "Sans-Serif",
+    fontsize = 8,
+    margin = 8,
+  ];
+  subgraph "App" {
+    subgraph "cluster-SubGraph.App" {
+      graph [
+        label = "App",
+        labelloc = "b",
+        labeljust = "l",
+        margin = "10",
+        fontsize = "16",
+        penwidth = "2",
+        pencolor = "#888888",
+        style = "filled,rounded",
+        fillcolor = "#f3f3f3",
+      ];
+      subgraph "cluster-SubGraph.ITBCP-BaseStack-Tokyo" {
+        graph [
+          label = "ITBCP-BaseStack-Tokyo",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "ITBCP-BaseStack-Tokyo/VPC" [
+          label = " VPC",
+          fontsize = 12,
+          image = "/Users/takuya-yn/AWS/aws-cdk-node/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-Virtual-Private-Cloud_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+        "ITBCP-BaseStack-Tokyo/PublicSG" [
+          label = " PublicSG",
+          fontsize = 12,
+        ];
+        "ITBCP-BaseStack-Tokyo/PrivateSG" [
+          label = " PrivateSG",
+          fontsize = 12,
+        ];
+        "ITBCP-BaseStack-Tokyo/RdsSubnetGroup/Default" [
+          label = " RDS DBSubnetGroup\nDefault",
+          fontsize = 12,
+          image = "/Users/takuya-yn/AWS/aws-cdk-node/node_modules/cdk-dia/icons/aws/Service/Arch_Database/64/Arch_Amazon-RDS_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.682,
+        ];
+      }
+      subgraph "cluster-SubGraph.ITBCP-BaseStack-Osaka" {
+        graph [
+          label = "ITBCP-BaseStack-Osaka",
+          labelloc = "b",
+          labeljust = "l",
+          margin = "10",
+          fontsize = "16",
+          penwidth = "2",
+          pencolor = "#888888",
+          style = "filled,rounded",
+          fillcolor = "#e4e4e4",
+        ];
+        "ITBCP-BaseStack-Osaka/VPC" [
+          label = " VPC",
+          fontsize = 12,
+          image = "/Users/takuya-yn/AWS/aws-cdk-node/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-Virtual-Private-Cloud_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 2,
+          height = 2.266,
+        ];
+        "ITBCP-BaseStack-Osaka/PublicSG" [
+          label = " PublicSG",
+          fontsize = 12,
+        ];
+        "ITBCP-BaseStack-Osaka/PrivateSG" [
+          label = " PrivateSG",
+          fontsize = 12,
+        ];
+        "ITBCP-BaseStack-Osaka/RdsSubnetGroup/Default" [
+          label = " RDS DBSubnetGroup\nDefault",
+          fontsize = 12,
+          image = "/Users/takuya-yn/AWS/aws-cdk-node/node_modules/cdk-dia/icons/aws/Service/Arch_Database/64/Arch_Amazon-RDS_64@5x.png",
+          imagescale = "true",
+          imagepos = "tc",
+          penwidth = "0",
+          shape = "node",
+          fixedsize = "true",
+          labelloc = "b",
+          width = 1.2,
+          height = 1.682,
+        ];
+      }
+    }
+  }
+  "ITBCP-BaseStack-Tokyo/PublicSG" -> "ITBCP-BaseStack-Tokyo/VPC" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Tokyo/PublicSG" -> "ITBCP-BaseStack-Tokyo/PrivateSG" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Tokyo/PrivateSG" -> "ITBCP-BaseStack-Tokyo/VPC" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Tokyo/PrivateSG" -> "ITBCP-BaseStack-Tokyo/PublicSG" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Tokyo/RdsSubnetGroup/Default" -> "ITBCP-BaseStack-Tokyo/VPC" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Osaka/PublicSG" -> "ITBCP-BaseStack-Osaka/VPC" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Osaka/PublicSG" -> "ITBCP-BaseStack-Osaka/PrivateSG" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Osaka/PrivateSG" -> "ITBCP-BaseStack-Osaka/VPC" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Osaka/PrivateSG" -> "ITBCP-BaseStack-Osaka/PublicSG" [
+    dir = "both",
+  ];
+  "ITBCP-BaseStack-Osaka/RdsSubnetGroup/Default" -> "ITBCP-BaseStack-Osaka/VPC" [
+    dir = "both",
+  ];
+}
