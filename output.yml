@@ -1,0 +1,333 @@
+Resources:
+  VPCB9E5F0B4:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/Resource
+  VPCpublicSubnet1Subnet325F50B2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/publicSubnet1
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet1/Subnet
+  VPCpublicSubnet1RouteTableF591E248:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/publicSubnet1
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet1/RouteTable
+  VPCpublicSubnet1RouteTableAssociationBFFA43B7:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet1RouteTableF591E248
+      SubnetId:
+        Ref: VPCpublicSubnet1Subnet325F50B2
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet1/RouteTableAssociation
+  VPCpublicSubnet1DefaultRoute19059ECD:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet1RouteTableF591E248
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VPCIGWB7E252D3
+    DependsOn:
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet1/DefaultRoute
+  VPCpublicSubnet2Subnet2B2DFF71:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/publicSubnet2
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet2/Subnet
+  VPCpublicSubnet2RouteTable55DAB1BB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/publicSubnet2
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet2/RouteTable
+  VPCpublicSubnet2RouteTableAssociation0849466B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet2RouteTable55DAB1BB
+      SubnetId:
+        Ref: VPCpublicSubnet2Subnet2B2DFF71
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet2/RouteTableAssociation
+  VPCpublicSubnet2DefaultRoute9ED4D6BC:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet2RouteTable55DAB1BB
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VPCIGWB7E252D3
+    DependsOn:
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/publicSubnet2/DefaultRoute
+  VPCprivateSubnet1SubnetE522290D:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: private
+        - Key: aws-cdk:subnet-type
+          Value: Isolated
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/privateSubnet1
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/privateSubnet1/Subnet
+  VPCprivateSubnet1RouteTable41566AF9:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/privateSubnet1
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/privateSubnet1/RouteTable
+  VPCprivateSubnet1RouteTableAssociation43FE0C59:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCprivateSubnet1RouteTable41566AF9
+      SubnetId:
+        Ref: VPCprivateSubnet1SubnetE522290D
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/privateSubnet1/RouteTableAssociation
+  VPCprivateSubnet2Subnet2F4D9530:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.3.0/24
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: private
+        - Key: aws-cdk:subnet-type
+          Value: Isolated
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/privateSubnet2
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/privateSubnet2/Subnet
+  VPCprivateSubnet2RouteTableBBE8BB2B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC/privateSubnet2
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/privateSubnet2/RouteTable
+  VPCprivateSubnet2RouteTableAssociation45BBC356:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      SubnetId:
+        Ref: VPCprivateSubnet2Subnet2F4D9530
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/privateSubnet2/RouteTableAssociation
+  VPCIGWB7E252D3:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: ITBCP-BaseStack-Tokyo/VPC
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/IGW
+  VPCVPCGW99B986DC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      InternetGatewayId:
+        Ref: VPCIGWB7E252D3
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/VPCGW
+  VPCS3GatewayEndpointF7E8953F:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName:
+        Fn::Join:
+          - ""
+          - - com.amazonaws.
+            - Ref: AWS::Region
+            - .s3
+      VpcId:
+        Ref: VPCB9E5F0B4
+      RouteTableIds:
+        - Ref: VPCprivateSubnet1RouteTable41566AF9
+        - Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      VpcEndpointType: Gateway
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/VPC/S3GatewayEndpoint/Resource
+  PublicSG4DCC415D:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ITBCP-BaseStack-Tokyo/PublicSG
+      GroupName: PublicSG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/32
+          Description: from 0.0.0.0/32:ALL TRAFFIC
+          IpProtocol: "-1"
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/PublicSG/Resource
+  PublicSGfromITBCPBaseStackTokyoPublicSG8C756CBAALLTRAFFICCA642BCE:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from ITBCPBaseStackTokyoPublicSG8C756CBA:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/PublicSG/from ITBCPBaseStackTokyoPublicSG8C756CBA:ALL TRAFFIC
+  PublicSGfromITBCPBaseStackTokyoPrivateSG64142081ALLTRAFFICFC4EDE97:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from ITBCPBaseStackTokyoPrivateSG64142081:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/PublicSG/from ITBCPBaseStackTokyoPrivateSG64142081:ALL TRAFFIC
+  PrivateSG78655DA9:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ITBCP-BaseStack-Tokyo/PrivateSG
+      GroupName: PrivateSG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/PrivateSG/Resource
+  PrivateSGfromITBCPBaseStackTokyoPrivateSG64142081ALLTRAFFICD87853EC:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from ITBCPBaseStackTokyoPrivateSG64142081:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/PrivateSG/from ITBCPBaseStackTokyoPrivateSG64142081:ALL TRAFFIC
+  PrivateSGfromITBCPBaseStackTokyoPublicSG8C756CBAALLTRAFFIC927F81C0:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from ITBCPBaseStackTokyoPublicSG8C756CBA:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/PrivateSG/from ITBCPBaseStackTokyoPublicSG8C756CBA:ALL TRAFFIC
+  RdsSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: RdsSubnetGroup
+      SubnetIds:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/RdsSubnetGroup/Default
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/32QTW/CMAyGf8vuIaxM2hnWIcStahH31PW28OFUsQNCVf770q5rd9rJ9uPX9itnOntZ6eentbnzAprzsgPnUXeVGDirEtkFD6hyRyw+gKj8g35pVP1Qh7DS3bGFvnUsclWE+mKhCjXhIJ+z0gXBg6kvOPOZbZgdWCPW0SRWhbc3Izjv2JOgT/ku0bt5jEfHaiPJ9tcVSdRIkq8tNa2zJKN0KiuE4K08dt6FdjD0L9jTp0fmqHzD6T+DoUn5/vYHxBgVuQb1iZe37FVn/YNPbO3CBxJ7RV3+xG/a28kefQEAAA==
+    Metadata:
+      aws:cdk:path: ITBCP-BaseStack-Tokyo/CDKMetadata/Default
+
