@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as rds from '@aws-cdk/aws-rds';
+import * as lambda from '@aws-cdk/aws-lambda';
 
 
 
@@ -129,5 +130,15 @@ export class AwsCdkNodeStack extends cdk.Stack {
     //     },
     //   }
     // );
+
+    //////////////////  //////////////////   //////////////////
+    const lambdaFunction = new lambda.Function(this, "test-lambda", {
+      code: new lambda.AssetCode("resources"),
+      handler: "lambda-handler.handler",
+      runtime: lambda.Runtime.PYTHON_3_9,
+      functionName: "test-lambda",
+    });
+
+
   }
 }
