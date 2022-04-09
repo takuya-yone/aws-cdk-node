@@ -1,6 +1,8 @@
+import requests
+
 def handler(event, context):
     statusCode = 200
-    body = "Hello from $Latest version" 
+    body = "Hello from $Latest version aieuo" 
     response = {
         'statusCode': statusCode,
         'body': body,
