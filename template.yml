@@ -14,13 +14,13 @@ Resources:
   VPCpublicSubnet1Subnet325F50B2:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 10.0.0.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 0
           - Fn::GetAZs: ""
+      CidrBlock: 10.0.0.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: aws-cdk:subnet-name
@@ -65,13 +65,13 @@ Resources:
   VPCpublicSubnet2Subnet2B2DFF71:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 10.0.1.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 1
           - Fn::GetAZs: ""
+      CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
       Tags:
         - Key: aws-cdk:subnet-name
@@ -116,13 +116,13 @@ Resources:
   VPCprivateSubnet1SubnetE522290D:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 10.0.2.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 0
           - Fn::GetAZs: ""
+      CidrBlock: 10.0.2.0/24
       MapPublicIpOnLaunch: false
       Tags:
         - Key: aws-cdk:subnet-name
@@ -155,13 +155,13 @@ Resources:
   VPCprivateSubnet2Subnet2F4D9530:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: 10.0.3.0/24
       VpcId:
         Ref: VPCB9E5F0B4
       AvailabilityZone:
         Fn::Select:
           - 1
           - Fn::GetAZs: ""
+      CidrBlock: 10.0.3.0/24
       MapPublicIpOnLaunch: false
       Tags:
         - Key: aws-cdk:subnet-name
@@ -327,7 +327,6 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAA/32QTW/CMAyGf8vuIaxM2hnWIcStahH31PW28OFUsQNCVf770q5rd9rJ9uPX9itnOntZ6eentbnzAprzsgPnUXeVGDirEtkFD6hyRyw+gKj8g35pVP1Qh7DS3bGFvnUsclWE+mKhCjXhIJ+z0gXBg6kvOPOZbZgdWCPW0SRWhbc3Izjv2JOgT/ku0bt5jEfHaiPJ9tcVSdRIkq8tNa2zJKN0KiuE4K08dt6FdjD0L9jTp0fmqHzD6T+DoUn5/vYHxBgVuQb1iZe37FVn/YNPbO3CBxJ7RV3+xG/a28kefQEAAA==
+      Analytics: v2:deflate64:H4sIAAAAAAAA/32QTU/DMAyGfwv3LKOTgCujoGm3qkW7p66B7MOpbGfTVPW/k5XScuJk+/Fr+5Uzmz2s7P3ds7vIAprDsoPAaLtKHRxMiRIiA5o8kChHUJN/0C/tzW2oQ1jZbtfCrbUrclPE+uihijXhIJ+zMkTFd1cfceYzW4sE8E59oElsCvZnpzjv2JIip3yT6MVdx6NjtdZk++uEpGYkydcbNW3wpKN0KiuEyF6vGw6xHQz9C7b0ySjSG24k/WcwNClfX/6Avu8NhQbtXpbn7Mk+pv/uxfsFR1J/Qlv+xG+FXzY/fAEAAA==
     Metadata:
       aws:cdk:path: ITBCP-BaseStack-Tokyo/CDKMetadata/Default
-

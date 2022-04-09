@@ -2,6 +2,9 @@ import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as rds from '@aws-cdk/aws-rds';
 
+
+
+
 export class AwsCdkNodeStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -28,6 +31,8 @@ export class AwsCdkNodeStack extends cdk.Stack {
 
     const proxyIP1 = '0.0.0.0/32';
     const proxyIP2 = '0.0.0.0/32';
+
+
 
     //// public security group
     const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
