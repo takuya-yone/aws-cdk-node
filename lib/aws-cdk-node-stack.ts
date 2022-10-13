@@ -2,9 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as rds from '@aws-cdk/aws-rds';
 import * as lambda from '@aws-cdk/aws-lambda';
-
-
-
+import { Role, ServicePrincipal, ManagedPolicy } from '@aws-cdk/aws-iam';
+import * as eks from '@aws-cdk/aws-eks';
 
 export class AwsCdkNodeStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -32,8 +31,6 @@ export class AwsCdkNodeStack extends cdk.Stack {
 
     const proxyIP1 = '0.0.0.0/32';
     // const proxyIP2 = '0.0.0.0/32';
-
-
 
     //// public security group
     const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
@@ -78,27 +75,65 @@ export class AwsCdkNodeStack extends cdk.Stack {
     );
     ////////////////// ////////////////// //////////////////
 
-    const EC2InterfaceEndpoint = vpc.addInterfaceEndpoint('EC2InterfaceEndpoint', {
-      service: ec2.InterfaceVpcEndpointAwsService.EC2,
-      subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-      securityGroups: [privateSecurityGroup]
-    });
+    const EC2InterfaceEndpoint = vpc.addInterfaceEndpoint(
+      'EC2InterfaceEndpoint',
+      {
+        service: ec2.InterfaceVpcEndpointAwsService.EC2,
+        subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+        securityGroups: [privateSecurityGroup],
+      }
+    );
 
-    const ECRInterfaceEndpoint = vpc.addInterfaceEndpoint('ECRInterfaceEndpoint', {
-      service: ec2.InterfaceVpcEndpointAwsService.ECR,
-      subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-      securityGroups: [privateSecurityGroup]
-    });
+    const ECRInterfaceEndpoint = vpc.addInterfaceEndpoint(
+      'ECRInterfaceEndpoint',
+      {
+        service: ec2.InterfaceVpcEndpointAwsService.ECR,
+        subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+        securityGroups: [privateSecurityGroup],
+      }
+    );
 
-    const ECRDockerInterfaceEndpoint = vpc.addInterfaceEndpoint('ECRDockerInterfaceEndpoint', {
-      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
-      subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-      securityGroups: [privateSecurityGroup]
-    });
+    const ECRDockerInterfaceEndpoint = vpc.addInterfaceEndpoint(
+      'ECRDockerInterfaceEndpoint',
+      {
+        service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
+        subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+        securityGroups: [privateSecurityGroup],
+      }
+    );
 
     const S3GatewayEndpoint = vpc.addGatewayEndpoint('S3GatewayEndpoint', {
       service: ec2.GatewayVpcEndpointAwsService.S3,
       subnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
+    });
+
+    const eksRole = new Role(this, 'eksRole', {
+      assumedBy: new ServicePrincipal('eks.amazonaws.com'),
+    });
+    eksRole.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName('AmazonEKSClusterPolicy')
+    );
+    eksRole.addManagedPolicy(
+      ManagedPolicy.fromAwsManagedPolicyName('AmazonEKSServicePolicy')
+    );
+
+    const cluster = new eks.Cluster(this, 'demogo-cluster', {
+      vpc: vpc,
+      mastersRole: eksRole,
+      clusterName: 'EKS-Sandbox',
+      endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE,
+      // mastersRole: clusterAdmin,
+      version: eks.KubernetesVersion.V1_21,
+      defaultCapacity: 0,
+    });
+
+    cluster.addNodegroupCapacity('EKS-Sandbox-ng', {
+      instanceTypes: [new ec2.InstanceType('t3.small')],
+      minSize: 2,
+      maxSize: 2,
+      diskSize: 10,
+      amiType: eks.NodegroupAmiType.BOTTLEROCKET_X86_64,
+      subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
     });
 
     ////////////////// Private Subnet Group for RDS //////////////////
@@ -161,7 +196,5 @@ export class AwsCdkNodeStack extends cdk.Stack {
     //   runtime: lambda.Runtime.PYTHON_3_9,
     //   functionName: "test-lambda",
     // });
-
-
   }
 }
