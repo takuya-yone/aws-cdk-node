@@ -117,12 +117,14 @@ export class AwsCdkNodeStack extends cdk.Stack {
       ManagedPolicy.fromAwsManagedPolicyName('AmazonEKSServicePolicy')
     );
 
-    const cluster = new eks.Cluster(this, 'demogo-cluster', {
+    const cluster = new eks.Cluster(this, 'EKS-Sandbox-cluster', {
       vpc: vpc,
       mastersRole: eksRole,
       clusterName: 'EKS-Sandbox',
       endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE,
       // mastersRole: clusterAdmin,
+      vpcSubnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
+
       version: eks.KubernetesVersion.V1_21,
       defaultCapacity: 0,
     });
