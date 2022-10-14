@@ -1,0 +1,68 @@
+apiVersion: eksctl.io/v1alpha5
+iam:
+  vpcResourceControllerPolicy: true
+  withOIDC: false
+kind: ClusterConfig
+metadata:
+  name: cluster-in-existing-vpc
+  region: ap-northeast-1
+  version: "1.22"
+nodeGroups:
+- amiFamily: Bottlerocket
+  bottlerocket:
+    settings: {}
+  containerRuntime: dockerd
+  desiredCapacity: 3
+  disableIMDSv1: false
+  disablePodIMDS: false
+  iam:
+    withAddonPolicies:
+      albIngress: false
+      appMesh: null
+      appMeshPreview: null
+      autoScaler: false
+      awsLoadBalancerController: true
+      certManager: false
+      cloudWatch: false
+      ebs: false
+      efs: false
+      externalDNS: false
+      fsx: false
+      imageBuilder: false
+      xRay: false
+  instanceSelector: {}
+  instanceType: t3.small
+  labels:
+    alpha.eksctl.io/cluster-name: cluster-in-existing-vpc
+    alpha.eksctl.io/nodegroup-name: ng-1-workers
+    role: workers
+  name: ng-1-workers
+  privateNetworking: true
+  securityGroups:
+    withLocal: true
+    withShared: true
+  ssh:
+    allow: false
+  volumeIOPS: 3000
+  volumeName: /dev/xvdb
+  volumeSize: 20
+  volumeThroughput: 125
+  volumeType: gp3
+privateCluster:
+  enabled: false
+  skipEndpointCreation: true
+vpc:
+  clusterEndpoints:
+    privateAccess: true
+    publicAccess: true
+  manageSharedNodeSecurityGroupRules: true
+  nat:
+    gateway: Disable
+  subnets:
+    private:
+      ap-northeast-1a:
+        az: ap-northeast-1a
+        id: subnet-0db0d65571bbfd2f1
+      ap-northeast-1c:
+        az: ap-northeast-1c
+        id: subnet-0c41634d3fbd84072

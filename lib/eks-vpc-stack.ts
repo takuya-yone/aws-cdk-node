@@ -5,6 +5,8 @@ import * as eks from '@aws-cdk/aws-eks';
 
 export class EksVpcStack extends cdk.Stack {
   vpc: ec2.Vpc;
+  publicSecurityGroup: ec2.SecurityGroup;
+  privateSecurityGroup: ec2.SecurityGroup;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -30,46 +32,55 @@ export class EksVpcStack extends cdk.Stack {
 
     // //////////////////  Security Group //////////////////
 
-    const proxyIP1 = '0.0.0.0/32';
+    const proxyIP1 = '180.147.109.184/32';
     // const proxyIP2 = '0.0.0.0/32';
 
     //// public security group
-    const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
+    this.publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
       vpc: this.vpc,
-      allowAllOutbound: true,
+      // allowAllOutbound: false,
       securityGroupName: 'PublicSG',
     });
 
     //// private security group
-    const privateSecurityGroup = new ec2.SecurityGroup(this, 'PrivateSG', {
+    this.privateSecurityGroup = new ec2.SecurityGroup(this, 'PrivateSG', {
       vpc: this.vpc,
-      allowAllOutbound: true,
+      // allowAllOutbound: false,
       securityGroupName: 'PrivateSG',
     });
 
     //// public security group Rule
-    publicSecurityGroup.addIngressRule(
-      publicSecurityGroup,
+    this.publicSecurityGroup.addIngressRule(
+      this.publicSecurityGroup,
       ec2.Port.allTraffic()
     );
-    publicSecurityGroup.addIngressRule(
+    this.publicSecurityGroup.addIngressRule(
       ec2.Peer.ipv4(proxyIP1),
       ec2.Port.allTraffic()
     );
-    publicSecurityGroup.addIngressRule(
-      privateSecurityGroup,
+    this.publicSecurityGroup.addIngressRule(
+      this.privateSecurityGroup,
+      ec2.Port.allTraffic()
+    );
+    this.publicSecurityGroup.addIngressRule(
+      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
       ec2.Port.allTraffic()
     );
 
     //// private security group Rule
-    privateSecurityGroup.addIngressRule(
-      privateSecurityGroup,
+    this.privateSecurityGroup.addIngressRule(
+      this.privateSecurityGroup,
       ec2.Port.allTraffic()
     );
-    privateSecurityGroup.addIngressRule(
-      publicSecurityGroup,
+    this.privateSecurityGroup.addIngressRule(
+      this.publicSecurityGroup,
       ec2.Port.allTraffic()
     );
+     this.privateSecurityGroup.addIngressRule(
+        ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+        ec2.Port.allTraffic()
+      );
+
     ////////////////// ////////////////// //////////////////
 
     const EC2InterfaceEndpoint = this.vpc.addInterfaceEndpoint(
@@ -77,7 +88,7 @@ export class EksVpcStack extends cdk.Stack {
       {
         service: ec2.InterfaceVpcEndpointAwsService.EC2,
         subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-        securityGroups: [privateSecurityGroup],
+        securityGroups: [this.privateSecurityGroup],
       }
     );
 
@@ -86,7 +97,7 @@ export class EksVpcStack extends cdk.Stack {
       {
         service: ec2.InterfaceVpcEndpointAwsService.ECR,
         subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-        securityGroups: [privateSecurityGroup],
+        securityGroups: [this.privateSecurityGroup],
       }
     );
 
@@ -95,7 +106,31 @@ export class EksVpcStack extends cdk.Stack {
       {
         service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
         subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
-        securityGroups: [privateSecurityGroup],
+        securityGroups: [this.privateSecurityGroup],
+      }
+    );
+
+    const STSEndpoint = this.vpc.addInterfaceEndpoint('STSEndpoint', {
+      service: ec2.InterfaceVpcEndpointAwsService.STS,
+      subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+      securityGroups: [this.privateSecurityGroup],
+    });
+
+    const ElasticLoadbalancingEndpoint = this.vpc.addInterfaceEndpoint(
+      'ElasticLoadbalancingEndpoint',
+      {
+        service: ec2.InterfaceVpcEndpointAwsService.ELASTIC_LOAD_BALANCING,
+        subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+        securityGroups: [this.privateSecurityGroup],
+      }
+    );
+
+    const CloudWatchLogsEndpoint = this.vpc.addInterfaceEndpoint(
+      'CloudWatchLogsEndpoint',
+      {
+        service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
+        subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+        securityGroups: [this.privateSecurityGroup],
       }
     );
 
