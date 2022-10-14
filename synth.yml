@@ -1,0 +1,1375 @@
+Resources:
+  VPCB9E5F0B4:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: EKS-Sandbox/VPC
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/Resource
+  VPCpublicSubnet1Subnet325F50B2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: kubernetes.io/role/elb
+          Value: "1"
+        - Key: Name
+          Value: EKS-Sandbox/VPC/publicSubnet1
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet1/Subnet
+  VPCpublicSubnet1RouteTableF591E248:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: kubernetes.io/role/elb
+          Value: "1"
+        - Key: Name
+          Value: EKS-Sandbox/VPC/publicSubnet1
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet1/RouteTable
+  VPCpublicSubnet1RouteTableAssociationBFFA43B7:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet1RouteTableF591E248
+      SubnetId:
+        Ref: VPCpublicSubnet1Subnet325F50B2
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet1/RouteTableAssociation
+  VPCpublicSubnet1DefaultRoute19059ECD:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet1RouteTableF591E248
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VPCIGWB7E252D3
+    DependsOn:
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet1/DefaultRoute
+  VPCpublicSubnet2Subnet2B2DFF71:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+        - Key: kubernetes.io/role/elb
+          Value: "1"
+        - Key: Name
+          Value: EKS-Sandbox/VPC/publicSubnet2
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet2/Subnet
+  VPCpublicSubnet2RouteTable55DAB1BB:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: kubernetes.io/role/elb
+          Value: "1"
+        - Key: Name
+          Value: EKS-Sandbox/VPC/publicSubnet2
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet2/RouteTable
+  VPCpublicSubnet2RouteTableAssociation0849466B:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet2RouteTable55DAB1BB
+      SubnetId:
+        Ref: VPCpublicSubnet2Subnet2B2DFF71
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet2/RouteTableAssociation
+  VPCpublicSubnet2DefaultRoute9ED4D6BC:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: VPCpublicSubnet2RouteTable55DAB1BB
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: VPCIGWB7E252D3
+    DependsOn:
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/publicSubnet2/DefaultRoute
+  VPCprivateSubnet1SubnetE522290D:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: private
+        - Key: aws-cdk:subnet-type
+          Value: Isolated
+        - Key: Name
+          Value: EKS-Sandbox/VPC/privateSubnet1
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/privateSubnet1/Subnet
+  VPCprivateSubnet1RouteTable41566AF9:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: EKS-Sandbox/VPC/privateSubnet1
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/privateSubnet1/RouteTable
+  VPCprivateSubnet1RouteTableAssociation43FE0C59:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCprivateSubnet1RouteTable41566AF9
+      SubnetId:
+        Ref: VPCprivateSubnet1SubnetE522290D
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/privateSubnet1/RouteTableAssociation
+  VPCprivateSubnet2Subnet2F4D9530:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      CidrBlock: 10.0.3.0/24
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: aws-cdk:subnet-name
+          Value: private
+        - Key: aws-cdk:subnet-type
+          Value: Isolated
+        - Key: Name
+          Value: EKS-Sandbox/VPC/privateSubnet2
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/privateSubnet2/Subnet
+  VPCprivateSubnet2RouteTableBBE8BB2B:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      Tags:
+        - Key: Name
+          Value: EKS-Sandbox/VPC/privateSubnet2
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/privateSubnet2/RouteTable
+  VPCprivateSubnet2RouteTableAssociation45BBC356:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      SubnetId:
+        Ref: VPCprivateSubnet2Subnet2F4D9530
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/privateSubnet2/RouteTableAssociation
+  VPCIGWB7E252D3:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: EKS-Sandbox/VPC
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/IGW
+  VPCVPCGW99B986DC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPCB9E5F0B4
+      InternetGatewayId:
+        Ref: VPCIGWB7E252D3
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/VPCGW
+  VPCEC2InterfaceEndpoint9AC3C90C:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: com.amazonaws.ap-northeast-1.ec2
+      VpcId:
+        Ref: VPCB9E5F0B4
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - PrivateSG78655DA9
+            - GroupId
+      SubnetIds:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+      VpcEndpointType: Interface
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/EC2InterfaceEndpoint/Resource
+  VPCECRInterfaceEndpoint4538FE1B:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: com.amazonaws.ap-northeast-1.ecr.api
+      VpcId:
+        Ref: VPCB9E5F0B4
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - PrivateSG78655DA9
+            - GroupId
+      SubnetIds:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+      VpcEndpointType: Interface
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/ECRInterfaceEndpoint/Resource
+  VPCECRDockerInterfaceEndpointD3627DC6:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName: com.amazonaws.ap-northeast-1.ecr.dkr
+      VpcId:
+        Ref: VPCB9E5F0B4
+      PrivateDnsEnabled: true
+      SecurityGroupIds:
+        - Fn::GetAtt:
+            - PrivateSG78655DA9
+            - GroupId
+      SubnetIds:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+      VpcEndpointType: Interface
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/ECRDockerInterfaceEndpoint/Resource
+  VPCS3GatewayEndpointF7E8953F:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      ServiceName:
+        Fn::Join:
+          - ""
+          - - com.amazonaws.
+            - Ref: AWS::Region
+            - .s3
+      VpcId:
+        Ref: VPCB9E5F0B4
+      RouteTableIds:
+        - Ref: VPCprivateSubnet1RouteTable41566AF9
+        - Ref: VPCprivateSubnet2RouteTableBBE8BB2B
+      VpcEndpointType: Gateway
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/VPC/S3GatewayEndpoint/Resource
+  PublicSG4DCC415D:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EKS-Sandbox/PublicSG
+      GroupName: PublicSG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp: 180.147.109.184/32
+          Description: from 180.147.109.184/32:ALL TRAFFIC
+          IpProtocol: "-1"
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/PublicSG/Resource
+  PublicSGfromEKSSandboxPublicSGBD8FA937ALLTRAFFIC386F8CE7:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from EKSSandboxPublicSGBD8FA937:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/PublicSG/from EKSSandboxPublicSGBD8FA937:ALL TRAFFIC
+  PublicSGfromEKSSandboxPrivateSG1501104AALLTRAFFIC3DD965BA:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from EKSSandboxPrivateSG1501104A:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/PublicSG/from EKSSandboxPrivateSG1501104A:ALL TRAFFIC
+  PrivateSG78655DA9:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EKS-Sandbox/PrivateSG
+      GroupName: PrivateSG
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      SecurityGroupIngress:
+        - CidrIp:
+            Fn::GetAtt:
+              - VPCB9E5F0B4
+              - CidrBlock
+          Description:
+            Fn::Join:
+              - ""
+              - - "from "
+                - Fn::GetAtt:
+                    - VPCB9E5F0B4
+                    - CidrBlock
+                - :443
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/PrivateSG/Resource
+  PrivateSGfromEKSSandboxPrivateSG1501104AALLTRAFFIC1BD44422:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from EKSSandboxPrivateSG1501104A:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/PrivateSG/from EKSSandboxPrivateSG1501104A:ALL TRAFFIC
+  PrivateSGfromEKSSandboxPublicSGBD8FA937ALLTRAFFIC35379B17:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: "-1"
+      Description: from EKSSandboxPublicSGBD8FA937:ALL TRAFFIC
+      GroupId:
+        Fn::GetAtt:
+          - PrivateSG78655DA9
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - PublicSG4DCC415D
+          - GroupId
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/PrivateSG/from EKSSandboxPublicSGBD8FA937:ALL TRAFFIC
+  eksRole67C4FFF0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: eks.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEKSClusterPolicy
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEKSServicePolicy
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/eksRole/Resource
+  EKSSandboxclusterRole2CEF21EA:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: eks.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEKSClusterPolicy
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/Role/Resource
+  EKSSandboxclusterControlPlaneSecurityGroup6F06F581:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EKS Control Plane Security Group
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: "-1"
+      VpcId:
+        Ref: VPCB9E5F0B4
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/ControlPlaneSecurityGroup/Resource
+  EKSSandboxclusterCreationRole5B048AD1:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":iam::"
+                    - Ref: AWS::AccountId
+                    - :root
+        Version: "2012-10-17"
+    DependsOn:
+      - VPCEC2InterfaceEndpoint9AC3C90C
+      - VPCECRDockerInterfaceEndpointD3627DC6
+      - VPCECRInterfaceEndpoint4538FE1B
+      - VPCIGWB7E252D3
+      - VPCprivateSubnet1RouteTable41566AF9
+      - VPCprivateSubnet1RouteTableAssociation43FE0C59
+      - VPCprivateSubnet1SubnetE522290D
+      - VPCprivateSubnet2RouteTableBBE8BB2B
+      - VPCprivateSubnet2RouteTableAssociation45BBC356
+      - VPCprivateSubnet2Subnet2F4D9530
+      - VPCpublicSubnet1DefaultRoute19059ECD
+      - VPCpublicSubnet1RouteTableF591E248
+      - VPCpublicSubnet1RouteTableAssociationBFFA43B7
+      - VPCpublicSubnet1Subnet325F50B2
+      - VPCpublicSubnet2DefaultRoute9ED4D6BC
+      - VPCpublicSubnet2RouteTable55DAB1BB
+      - VPCpublicSubnet2RouteTableAssociation0849466B
+      - VPCpublicSubnet2Subnet2B2DFF71
+      - VPCB9E5F0B4
+      - VPCS3GatewayEndpointF7E8953F
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/Resource/CreationRole/Resource
+  EKSSandboxclusterCreationRoleDefaultPolicy500EEBE4:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: iam:PassRole
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - EKSSandboxclusterRole2CEF21EA
+                - Arn
+          - Action:
+              - eks:CreateCluster
+              - eks:DescribeCluster
+              - eks:DescribeUpdate
+              - eks:DeleteCluster
+              - eks:UpdateClusterVersion
+              - eks:UpdateClusterConfig
+              - eks:CreateFargateProfile
+              - eks:TagResource
+              - eks:UntagResource
+            Effect: Allow
+            Resource:
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":eks:ap-northeast-1:"
+                    - Ref: AWS::AccountId
+                    - :cluster/EKS-Sandbox-cluster
+              - Fn::Join:
+                  - ""
+                  - - "arn:"
+                    - Ref: AWS::Partition
+                    - ":eks:ap-northeast-1:"
+                    - Ref: AWS::AccountId
+                    - :cluster/EKS-Sandbox-cluster/*
+          - Action:
+              - eks:DescribeFargateProfile
+              - eks:DeleteFargateProfile
+            Effect: Allow
+            Resource:
+              Fn::Join:
+                - ""
+                - - "arn:"
+                  - Ref: AWS::Partition
+                  - ":eks:ap-northeast-1:"
+                  - Ref: AWS::AccountId
+                  - :fargateprofile/EKS-Sandbox-cluster/*
+          - Action:
+              - iam:GetRole
+              - iam:listAttachedRolePolicies
+            Effect: Allow
+            Resource: "*"
+          - Action: iam:CreateServiceLinkedRole
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - ec2:DescribeInstances
+              - ec2:DescribeNetworkInterfaces
+              - ec2:DescribeSecurityGroups
+              - ec2:DescribeSubnets
+              - ec2:DescribeRouteTables
+              - ec2:DescribeDhcpOptions
+              - ec2:DescribeVpcs
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: EKSSandboxclusterCreationRoleDefaultPolicy500EEBE4
+      Roles:
+        - Ref: EKSSandboxclusterCreationRole5B048AD1
+    DependsOn:
+      - VPCEC2InterfaceEndpoint9AC3C90C
+      - VPCECRDockerInterfaceEndpointD3627DC6
+      - VPCECRInterfaceEndpoint4538FE1B
+      - VPCIGWB7E252D3
+      - VPCprivateSubnet1RouteTable41566AF9
+      - VPCprivateSubnet1RouteTableAssociation43FE0C59
+      - VPCprivateSubnet1SubnetE522290D
+      - VPCprivateSubnet2RouteTableBBE8BB2B
+      - VPCprivateSubnet2RouteTableAssociation45BBC356
+      - VPCprivateSubnet2Subnet2F4D9530
+      - VPCpublicSubnet1DefaultRoute19059ECD
+      - VPCpublicSubnet1RouteTableF591E248
+      - VPCpublicSubnet1RouteTableAssociationBFFA43B7
+      - VPCpublicSubnet1Subnet325F50B2
+      - VPCpublicSubnet2DefaultRoute9ED4D6BC
+      - VPCpublicSubnet2RouteTable55DAB1BB
+      - VPCpublicSubnet2RouteTableAssociation0849466B
+      - VPCpublicSubnet2Subnet2B2DFF71
+      - VPCB9E5F0B4
+      - VPCS3GatewayEndpointF7E8953F
+      - VPCVPCGW99B986DC
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/Resource/CreationRole/DefaultPolicy/Resource
+  EKSSandboxcluster8FBFCA1D:
+    Type: Custom::AWSCDK-EKS-Cluster
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - awscdkawseksClusterResourceProviderNestedStackawscdkawseksClusterResourceProviderNestedStackResource9827C454
+          - Outputs.EKSSandboxawscdkawseksClusterResourceProviderframeworkonEventA4783484Arn
+      Config:
+        name: EKS-Sandbox-cluster
+        version: "1.21"
+        roleArn:
+          Fn::GetAtt:
+            - EKSSandboxclusterRole2CEF21EA
+            - Arn
+        resourcesVpcConfig:
+          subnetIds:
+            - Ref: VPCprivateSubnet1SubnetE522290D
+            - Ref: VPCprivateSubnet2Subnet2F4D9530
+          securityGroupIds:
+            - Fn::GetAtt:
+                - EKSSandboxclusterControlPlaneSecurityGroup6F06F581
+                - GroupId
+          endpointPublicAccess: true
+          endpointPrivateAccess: true
+      AssumeRoleArn:
+        Fn::GetAtt:
+          - EKSSandboxclusterCreationRole5B048AD1
+          - Arn
+      AttributesRevision: 2
+    DependsOn:
+      - EKSSandboxclusterCreationRoleDefaultPolicy500EEBE4
+      - EKSSandboxclusterCreationRole5B048AD1
+      - VPCEC2InterfaceEndpoint9AC3C90C
+      - VPCECRDockerInterfaceEndpointD3627DC6
+      - VPCECRInterfaceEndpoint4538FE1B
+      - VPCIGWB7E252D3
+      - VPCprivateSubnet1RouteTable41566AF9
+      - VPCprivateSubnet1RouteTableAssociation43FE0C59
+      - VPCprivateSubnet1SubnetE522290D
+      - VPCprivateSubnet2RouteTableBBE8BB2B
+      - VPCprivateSubnet2RouteTableAssociation45BBC356
+      - VPCprivateSubnet2Subnet2F4D9530
+      - VPCpublicSubnet1DefaultRoute19059ECD
+      - VPCpublicSubnet1RouteTableF591E248
+      - VPCpublicSubnet1RouteTableAssociationBFFA43B7
+      - VPCpublicSubnet1Subnet325F50B2
+      - VPCpublicSubnet2DefaultRoute9ED4D6BC
+      - VPCpublicSubnet2RouteTable55DAB1BB
+      - VPCpublicSubnet2RouteTableAssociation0849466B
+      - VPCpublicSubnet2Subnet2B2DFF71
+      - VPCB9E5F0B4
+      - VPCS3GatewayEndpointF7E8953F
+      - VPCVPCGW99B986DC
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/Resource/Resource/Default
+  EKSSandboxclusterKubectlReadyBarrier6982D790:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: aws:cdk:eks:kubectl-ready
+    DependsOn:
+      - EKSSandboxclusterCreationRoleDefaultPolicy500EEBE4
+      - EKSSandboxclusterCreationRole5B048AD1
+      - EKSSandboxcluster8FBFCA1D
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/KubectlReadyBarrier
+  EKSSandboxclusterAwsAuthmanifest00CEFD69:
+    Type: Custom::AWSCDK-EKS-KubernetesResource
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B
+          - Outputs.EKSSandboxawscdkawseksKubectlProviderframeworkonEvent74090B59Arn
+      Manifest:
+        Fn::Join:
+          - ""
+          - - '[{"apiVersion":"v1","kind":"ConfigMap","metadata":{"name":"aws-auth","namespace":"kube-system","labels":{"aws.cdk.eks/prune-c88b26cd0e895f4eef3546020e4f4c4711a6e93745":""}},"data":{"mapRoles":"[{\"rolearn\":\"'
+            - Fn::GetAtt:
+                - eksRole67C4FFF0
+                - Arn
+            - \",\"username\":\"
+            - Fn::GetAtt:
+                - eksRole67C4FFF0
+                - Arn
+            - \",\"groups\":[\"system:masters\"]},{\"rolearn\":\"
+            - Fn::GetAtt:
+                - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+                - Arn
+            - \",\"username\":\"system:node:{{EC2PrivateDNSName}}\",\"groups\":[\"system:bootstrappers\",\"system:nodes\"]}]","mapUsers":"[]","mapAccounts":"[]"}}]
+      ClusterName:
+        Ref: EKSSandboxcluster8FBFCA1D
+      RoleArn:
+        Fn::GetAtt:
+          - EKSSandboxclusterCreationRole5B048AD1
+          - Arn
+      PruneLabel: aws.cdk.eks/prune-c88b26cd0e895f4eef3546020e4f4c4711a6e93745
+      Overwrite: true
+    DependsOn:
+      - EKSSandboxclusterKubectlReadyBarrier6982D790
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/AwsAuth/manifest/Resource/Default
+  EKSSandboxclusterOpenIdConnectProvider02061A83:
+    Type: Custom::AWSCDKOpenIdConnectProvider
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0
+          - Arn
+      ClientIDList:
+        - sts.amazonaws.com
+      ThumbprintList:
+        - 9e99a48a9960b14926bb7f3b02e22da2b0ab7280
+      Url:
+        Fn::GetAtt:
+          - EKSSandboxcluster8FBFCA1D
+          - OpenIdConnectIssuerUrl
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-cluster/OpenIdConnectProvider/Resource/Default
+  awscdkawseksClusterResourceProviderNestedStackawscdkawseksClusterResourceProviderNestedStackResource9827C454:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        Fn::Join:
+          - ""
+          - - https://s3.ap-northeast-1.
+            - Ref: AWS::URLSuffix
+            - /
+            - Ref: AssetParameters8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0S3BucketB6BD9BF6
+            - /
+            - Fn::Select:
+                - 0
+                - Fn::Split:
+                    - "||"
+                    - Ref: AssetParameters8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0S3VersionKeyF534098A
+            - Fn::Select:
+                - 1
+                - Fn::Split:
+                    - "||"
+                    - Ref: AssetParameters8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0S3VersionKeyF534098A
+      Parameters:
+        referencetoEKSSandboxAssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeS3Bucket920B1CBARef:
+          Ref: AssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeS3Bucket4E7CD097
+        referencetoEKSSandboxAssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeS3VersionKey11A361B1Ref:
+          Ref: AssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeS3VersionKey93D16224
+        referencetoEKSSandboxEKSSandboxclusterCreationRoleE3511E56Arn:
+          Fn::GetAtt:
+            - EKSSandboxclusterCreationRole5B048AD1
+            - Arn
+        referencetoEKSSandboxAssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dS3BucketFE64D1B1Ref:
+          Ref: AssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dS3BucketF88C8A92
+        referencetoEKSSandboxAssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dS3VersionKey3633EDDDRef:
+          Ref: AssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dS3VersionKeyB91EE5ED
+        referencetoEKSSandboxAssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3Bucket2517555ERef:
+          Ref: AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3Bucket766250D8
+        referencetoEKSSandboxAssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3VersionKey1B0B7CD1Ref:
+          Ref: AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3VersionKey850D9181
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/@aws-cdk--aws-eks.ClusterResourceProvider.NestedStack/@aws-cdk--aws-eks.ClusterResourceProvider.NestedStackResource
+      aws:asset:path: EKSSandboxawscdkawseksClusterResourceProviderACAA4DC0.nested.template.json
+      aws:asset:property: TemplateURL
+  awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        Fn::Join:
+          - ""
+          - - https://s3.ap-northeast-1.
+            - Ref: AWS::URLSuffix
+            - /
+            - Ref: AssetParameters37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5S3Bucket99073B2B
+            - /
+            - Fn::Select:
+                - 0
+                - Fn::Split:
+                    - "||"
+                    - Ref: AssetParameters37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5S3VersionKeyADBC0937
+            - Fn::Select:
+                - 1
+                - Fn::Split:
+                    - "||"
+                    - Ref: AssetParameters37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5S3VersionKeyADBC0937
+      Parameters:
+        referencetoEKSSandboxEKSSandboxclusterEC3E1BEEArn:
+          Fn::GetAtt:
+            - EKSSandboxcluster8FBFCA1D
+            - Arn
+        referencetoEKSSandboxEKSSandboxclusterCreationRoleE3511E56Arn:
+          Fn::GetAtt:
+            - EKSSandboxclusterCreationRole5B048AD1
+            - Arn
+        referencetoEKSSandboxAssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03S3Bucket6F51CB15Ref:
+          Ref: AssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03S3Bucket17F51109
+        referencetoEKSSandboxAssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03S3VersionKey0860CD77Ref:
+          Ref: AssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03S3VersionKeyAFA9FFD9
+        referencetoEKSSandboxVPCprivateSubnet1Subnet7CF24BAFRef:
+          Ref: VPCprivateSubnet1SubnetE522290D
+        referencetoEKSSandboxVPCprivateSubnet2Subnet1BA8910ERef:
+          Ref: VPCprivateSubnet2Subnet2F4D9530
+        referencetoEKSSandboxEKSSandboxclusterEC3E1BEEClusterSecurityGroupId:
+          Fn::GetAtt:
+            - EKSSandboxcluster8FBFCA1D
+            - ClusterSecurityGroupId
+        referencetoEKSSandboxAssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7S3Bucket1DF2941ERef:
+          Ref: AssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7S3BucketA63AAFCE
+        referencetoEKSSandboxAssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7S3VersionKey865F5761Ref:
+          Ref: AssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7S3VersionKeyA43C529C
+        referencetoEKSSandboxAssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedS3Bucket641CE227Ref:
+          Ref: AssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedS3Bucket83B8778F
+        referencetoEKSSandboxAssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedS3VersionKey2E03AEFBRef:
+          Ref: AssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedS3VersionKeyADF6A055
+        referencetoEKSSandboxAssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3Bucket2517555ERef:
+          Ref: AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3Bucket766250D8
+        referencetoEKSSandboxAssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3VersionKey1B0B7CD1Ref:
+          Ref: AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3VersionKey850D9181
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/@aws-cdk--aws-eks.KubectlProvider.NestedStack/@aws-cdk--aws-eks.KubectlProvider.NestedStackResource
+      aws:asset:path: EKSSandboxawscdkawseksKubectlProviderAF28BE9D.nested.template.json
+      aws:asset:property: TemplateURL
+  EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaConditionJson40574DD9:
+    Type: Custom::AWSCDKCfnJson
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - AWSCDKCfnUtilsProviderCustomResourceProviderHandlerCF82AA57
+          - Arn
+      Value:
+        Fn::Join:
+          - ""
+          - - '{"'
+            - Fn::Select:
+                - 1
+                - Fn::Split:
+                    - :oidc-provider/
+                    - Ref: EKSSandboxclusterOpenIdConnectProvider02061A83
+            - :aud":"sts.amazonaws.com","
+            - Fn::Select:
+                - 1
+                - Fn::Split:
+                    - :oidc-provider/
+                    - Ref: EKSSandboxclusterOpenIdConnectProvider02061A83
+            - :sub":"system:serviceaccount:kube-system:aws-load-balancer-controller"}
+    DependsOn:
+      - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+      - EKSSandboxNodeGroupF0CA7533
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKSSandboxEKSSandboxcluster363A1027-AlbController/alb-sa/ConditionJson/Resource/Default
+  EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleA4C16FB8:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                Fn::GetAtt:
+                  - EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaConditionJson40574DD9
+                  - Value
+            Effect: Allow
+            Principal:
+              Federated:
+                Ref: EKSSandboxclusterOpenIdConnectProvider02061A83
+        Version: "2012-10-17"
+    DependsOn:
+      - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+      - EKSSandboxNodeGroupF0CA7533
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKSSandboxEKSSandboxcluster363A1027-AlbController/alb-sa/Role/Resource
+  EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleDefaultPolicyD24D11AA:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: iam:CreateServiceLinkedRole
+            Condition:
+              StringEquals:
+                iam:AWSServiceName: elasticloadbalancing.amazonaws.com
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - ec2:DescribeAccountAttributes
+              - ec2:DescribeAddresses
+              - ec2:DescribeAvailabilityZones
+              - ec2:DescribeInternetGateways
+              - ec2:DescribeVpcs
+              - ec2:DescribeVpcPeeringConnections
+              - ec2:DescribeSubnets
+              - ec2:DescribeSecurityGroups
+              - ec2:DescribeInstances
+              - ec2:DescribeNetworkInterfaces
+              - ec2:DescribeTags
+              - ec2:GetCoipPoolUsage
+              - ec2:DescribeCoipPools
+              - elasticloadbalancing:DescribeLoadBalancers
+              - elasticloadbalancing:DescribeLoadBalancerAttributes
+              - elasticloadbalancing:DescribeListeners
+              - elasticloadbalancing:DescribeListenerCertificates
+              - elasticloadbalancing:DescribeSSLPolicies
+              - elasticloadbalancing:DescribeRules
+              - elasticloadbalancing:DescribeTargetGroups
+              - elasticloadbalancing:DescribeTargetGroupAttributes
+              - elasticloadbalancing:DescribeTargetHealth
+              - elasticloadbalancing:DescribeTags
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - cognito-idp:DescribeUserPoolClient
+              - acm:ListCertificates
+              - acm:DescribeCertificate
+              - iam:ListServerCertificates
+              - iam:GetServerCertificate
+              - waf-regional:GetWebACL
+              - waf-regional:GetWebACLForResource
+              - waf-regional:AssociateWebACL
+              - waf-regional:DisassociateWebACL
+              - wafv2:GetWebACL
+              - wafv2:GetWebACLForResource
+              - wafv2:AssociateWebACL
+              - wafv2:DisassociateWebACL
+              - shield:GetSubscriptionState
+              - shield:DescribeProtection
+              - shield:CreateProtection
+              - shield:DeleteProtection
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - ec2:AuthorizeSecurityGroupIngress
+              - ec2:RevokeSecurityGroupIngress
+            Effect: Allow
+            Resource: "*"
+          - Action: ec2:CreateSecurityGroup
+            Effect: Allow
+            Resource: "*"
+          - Action: ec2:CreateTags
+            Condition:
+              StringEquals:
+                ec2:CreateAction: CreateSecurityGroup
+              "Null":
+                aws:RequestTag/elbv2.k8s.aws/cluster: "false"
+            Effect: Allow
+            Resource: arn:aws:ec2:*:*:security-group/*
+          - Action:
+              - ec2:CreateTags
+              - ec2:DeleteTags
+            Condition:
+              "Null":
+                aws:RequestTag/elbv2.k8s.aws/cluster: "true"
+                aws:ResourceTag/elbv2.k8s.aws/cluster: "false"
+            Effect: Allow
+            Resource: arn:aws:ec2:*:*:security-group/*
+          - Action:
+              - ec2:AuthorizeSecurityGroupIngress
+              - ec2:RevokeSecurityGroupIngress
+              - ec2:DeleteSecurityGroup
+            Condition:
+              "Null":
+                aws:ResourceTag/elbv2.k8s.aws/cluster: "false"
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - elasticloadbalancing:CreateLoadBalancer
+              - elasticloadbalancing:CreateTargetGroup
+            Condition:
+              "Null":
+                aws:RequestTag/elbv2.k8s.aws/cluster: "false"
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - elasticloadbalancing:CreateListener
+              - elasticloadbalancing:DeleteListener
+              - elasticloadbalancing:CreateRule
+              - elasticloadbalancing:DeleteRule
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - elasticloadbalancing:AddTags
+              - elasticloadbalancing:RemoveTags
+            Condition:
+              "Null":
+                aws:RequestTag/elbv2.k8s.aws/cluster: "true"
+                aws:ResourceTag/elbv2.k8s.aws/cluster: "false"
+            Effect: Allow
+            Resource:
+              - arn:aws:elasticloadbalancing:*:*:targetgroup/*/*
+              - arn:aws:elasticloadbalancing:*:*:loadbalancer/net/*/*
+              - arn:aws:elasticloadbalancing:*:*:loadbalancer/app/*/*
+          - Action:
+              - elasticloadbalancing:AddTags
+              - elasticloadbalancing:RemoveTags
+            Effect: Allow
+            Resource:
+              - arn:aws:elasticloadbalancing:*:*:listener/net/*/*/*
+              - arn:aws:elasticloadbalancing:*:*:listener/app/*/*/*
+              - arn:aws:elasticloadbalancing:*:*:listener-rule/net/*/*/*
+              - arn:aws:elasticloadbalancing:*:*:listener-rule/app/*/*/*
+          - Action:
+              - elasticloadbalancing:ModifyLoadBalancerAttributes
+              - elasticloadbalancing:SetIpAddressType
+              - elasticloadbalancing:SetSecurityGroups
+              - elasticloadbalancing:SetSubnets
+              - elasticloadbalancing:DeleteLoadBalancer
+              - elasticloadbalancing:ModifyTargetGroup
+              - elasticloadbalancing:ModifyTargetGroupAttributes
+              - elasticloadbalancing:DeleteTargetGroup
+            Condition:
+              "Null":
+                aws:ResourceTag/elbv2.k8s.aws/cluster: "false"
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - elasticloadbalancing:RegisterTargets
+              - elasticloadbalancing:DeregisterTargets
+            Effect: Allow
+            Resource: arn:aws:elasticloadbalancing:*:*:targetgroup/*/*
+          - Action:
+              - elasticloadbalancing:SetWebAcl
+              - elasticloadbalancing:ModifyListener
+              - elasticloadbalancing:AddListenerCertificates
+              - elasticloadbalancing:RemoveListenerCertificates
+              - elasticloadbalancing:ModifyRule
+            Effect: Allow
+            Resource: "*"
+        Version: "2012-10-17"
+      PolicyName: EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleDefaultPolicyD24D11AA
+      Roles:
+        - Ref: EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleA4C16FB8
+    DependsOn:
+      - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+      - EKSSandboxNodeGroupF0CA7533
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKSSandboxEKSSandboxcluster363A1027-AlbController/alb-sa/Role/DefaultPolicy/Resource
+  EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsamanifestalbsaServiceAccountResourceE6842238:
+    Type: Custom::AWSCDK-EKS-KubernetesResource
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B
+          - Outputs.EKSSandboxawscdkawseksKubectlProviderframeworkonEvent74090B59Arn
+      Manifest:
+        Fn::Join:
+          - ""
+          - - '[{"apiVersion":"v1","kind":"ServiceAccount","metadata":{"name":"aws-load-balancer-controller","namespace":"kube-system","labels":{"aws.cdk.eks/prune-c8655f966e8fb938e3a16684ba5e90293d05c47b4d":"","app.kubernetes.io/name":"aws-load-balancer-controller"},"annotations":{"eks.amazonaws.com/role-arn":"'
+            - Fn::GetAtt:
+                - EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleA4C16FB8
+                - Arn
+            - '"}}}]'
+      ClusterName:
+        Ref: EKSSandboxcluster8FBFCA1D
+      RoleArn:
+        Fn::GetAtt:
+          - EKSSandboxclusterCreationRole5B048AD1
+          - Arn
+      PruneLabel: aws.cdk.eks/prune-c8655f966e8fb938e3a16684ba5e90293d05c47b4d
+    DependsOn:
+      - EKSSandboxclusterKubectlReadyBarrier6982D790
+      - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+      - EKSSandboxNodeGroupF0CA7533
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKSSandboxEKSSandboxcluster363A1027-AlbController/alb-sa/manifest-alb-saServiceAccountResource/Resource/Default
+  EKSSandboxEKSSandboxcluster363A1027AlbControllerCE57A567:
+    Type: Custom::AWSCDK-EKS-HelmChart
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - awscdkawseksKubectlProviderNestedStackawscdkawseksKubectlProviderNestedStackResourceA7AEBA6B
+          - Outputs.EKSSandboxawscdkawseksKubectlProviderframeworkonEvent74090B59Arn
+      ClusterName:
+        Ref: EKSSandboxcluster8FBFCA1D
+      RoleArn:
+        Fn::GetAtt:
+          - EKSSandboxclusterCreationRole5B048AD1
+          - Arn
+      Release: aws-load-balancer-controller
+      Chart: aws-load-balancer-controller
+      Version: 1.2.7
+      Wait: true
+      Timeout: 900s
+      Values:
+        Fn::Join:
+          - ""
+          - - '{"clusterName":"'
+            - Ref: EKSSandboxcluster8FBFCA1D
+            - '","serviceAccount":{"create":false,"name":"aws-load-balancer-controller"},"region":"ap-northeast-1","vpcId":"'
+            - Ref: VPCB9E5F0B4
+            - '","image":{"repository":"602401143452.dkr.ecr.us-west-2.amazonaws.com/amazon/aws-load-balancer-controller","tag":"v2.4.1"}}'
+      Namespace: kube-system
+      Repository: https://aws.github.io/eks-charts
+      CreateNamespace: true
+    DependsOn:
+      - EKSSandboxclusterAwsAuthmanifest00CEFD69
+      - EKSSandboxclusterKubectlReadyBarrier6982D790
+      - EKSSandboxclusterOpenIdConnectProvider02061A83
+      - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+      - EKSSandboxNodeGroupF0CA7533
+      - EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaConditionJson40574DD9
+      - EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsamanifestalbsaServiceAccountResourceE6842238
+      - EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleDefaultPolicyD24D11AA
+      - EKSSandboxEKSSandboxcluster363A1027AlbControlleralbsaRoleA4C16FB8
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKSSandboxEKSSandboxcluster363A1027-AlbController/Resource/Resource/Default
+  CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: Inline
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Resource: "*"
+                Action:
+                  - iam:CreateOpenIDConnectProvider
+                  - iam:DeleteOpenIDConnectProvider
+                  - iam:UpdateOpenIDConnectProviderThumbprint
+                  - iam:AddClientIDToOpenIDConnectProvider
+                  - iam:RemoveClientIDFromOpenIDConnectProvider
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/Custom::AWSCDKOpenIdConnectProviderCustomResourceProvider/Role
+  CustomAWSCDKOpenIdConnectProviderCustomResourceProviderHandlerF2C543E0:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459aS3Bucket8B55D7C9
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459aS3VersionKey056464CA
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459aS3VersionKey056464CA
+      Timeout: 900
+      MemorySize: 128
+      Handler: __entrypoint__.handler
+      Role:
+        Fn::GetAtt:
+          - CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65
+          - Arn
+      Runtime: nodejs14.x
+    DependsOn:
+      - CustomAWSCDKOpenIdConnectProviderCustomResourceProviderRole517FED65
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/Custom::AWSCDKOpenIdConnectProviderCustomResourceProvider/Handler
+      aws:asset:path: asset.37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459a
+      aws:asset:property: Code
+  AWSCDKCfnUtilsProviderCustomResourceProviderRoleFE0EE867:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/AWSCDKCfnUtilsProviderCustomResourceProvider/Role
+  AWSCDKCfnUtilsProviderCustomResourceProviderHandlerCF82AA57:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8faS3BucketBDF53B2D
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8faS3VersionKey840C0EAC
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8faS3VersionKey840C0EAC
+      Timeout: 900
+      MemorySize: 128
+      Handler: __entrypoint__.handler
+      Role:
+        Fn::GetAtt:
+          - AWSCDKCfnUtilsProviderCustomResourceProviderRoleFE0EE867
+          - Arn
+      Runtime: nodejs14.x
+    DependsOn:
+      - AWSCDKCfnUtilsProviderCustomResourceProviderRoleFE0EE867
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/AWSCDKCfnUtilsProviderCustomResourceProvider/Handler
+      aws:asset:path: asset.4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8fa
+      aws:asset:property: Code
+  EKSSandboxNodeGroupNodeGroupRole9AA641BB:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEKS_CNI_Policy
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-NodeGroup/NodeGroupRole/Resource
+  EKSSandboxNodeGroupF0CA7533:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      ClusterName:
+        Ref: EKSSandboxcluster8FBFCA1D
+      NodeRole:
+        Fn::GetAtt:
+          - EKSSandboxNodeGroupNodeGroupRole9AA641BB
+          - Arn
+      Subnets:
+        - Ref: VPCprivateSubnet1SubnetE522290D
+        - Ref: VPCprivateSubnet2Subnet2F4D9530
+      AmiType: BOTTLEROCKET_x86_64
+      CapacityType: ON_DEMAND
+      ForceUpdateEnabled: false
+      InstanceTypes:
+        - t3.small
+      NodegroupName: EKS-Sandbox-NodeGroup
+      ScalingConfig:
+        DesiredSize: 2
+        MaxSize: 2
+        MinSize: 2
+      Tags:
+        Name: EKS-Sandbox-Node
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/EKS-Sandbox-NodeGroup/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/31Sy07DMBD8Fu7GpXAoR6IIlYKgUYJ6d5xt6taxI3udqory72weNBUHTp4Z72N27SVfrlb84e5FnP29LE6LVloHvM1QyBNLwdvgJLDYGo8uSGRx8Gir+WJvbvE2YB2wR2MBAolwogIE15N3b82fEomzjSroOvIekNJKZcqO9X5akI+83dWyT90lMUtCrpXMQm5gbHJFqQ0I3yLXMOuzRqWtVAJV330KZolTjUCYa2wMuSS8JvUsLlPTiUVIAx0qMMiGuL2QQM5eTVFbZXAKvtIp6zYiAxmcwsva2VAPLv8VNqZ04H3HlKh4m9pxsuFMLG1h8DeijsHJ8zbWtNh+kWcfBTywj5AP84D/FEbtwSPb1mA2Bb2mAYnz5nVOEjqrNbEMXKMkRFLaQLbfQFfxQThkX7aA8tfrlXRdxwwRfvSLZvnMn+g3Hb1S946yVQU8Hc8f3dxSu2oCAAA=
+    Metadata:
+      aws:cdk:path: EKS-Sandbox/CDKMetadata/Default
+Outputs:
+  EKSSandboxclusterConfigCommandCE716114:
+    Value:
+      Fn::Join:
+        - ""
+        - - "aws eks update-kubeconfig --name "
+          - Ref: EKSSandboxcluster8FBFCA1D
+          - " --region ap-northeast-1 --role-arn "
+          - Fn::GetAtt:
+              - eksRole67C4FFF0
+              - Arn
+  EKSSandboxclusterGetTokenCommandF7A14659:
+    Value:
+      Fn::Join:
+        - ""
+        - - "aws eks get-token --cluster-name "
+          - Ref: EKSSandboxcluster8FBFCA1D
+          - " --region ap-northeast-1 --role-arn "
+          - Fn::GetAtt:
+              - eksRole67C4FFF0
+              - Arn
+Parameters:
+  AssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeS3Bucket4E7CD097:
+    Type: String
+    Description: S3 bucket for asset "4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06ee"
+  AssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeS3VersionKey93D16224:
+    Type: String
+    Description: S3 key for asset version "4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06ee"
+  AssetParameters4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06eeArtifactHash515E16AE:
+    Type: String
+    Description: Artifact hash for asset "4288ebb3652acdf2d828b7db7ca44a7162a401ace50ebb4026e84b18a02a06ee"
+  AssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dS3BucketF88C8A92:
+    Type: String
+    Description: S3 bucket for asset "98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02d"
+  AssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dS3VersionKeyB91EE5ED:
+    Type: String
+    Description: S3 key for asset version "98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02d"
+  AssetParameters98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02dArtifactHash4C20B4DA:
+    Type: String
+    Description: Artifact hash for asset "98908a88aa1d19a5175824f9f289b2d4736b7e17837f4e1ca871251a7505c02d"
+  AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3Bucket766250D8:
+    Type: String
+    Description: S3 bucket for asset "3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671"
+  AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671S3VersionKey850D9181:
+    Type: String
+    Description: S3 key for asset version "3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671"
+  AssetParameters3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671ArtifactHashC40EE1D5:
+    Type: String
+    Description: Artifact hash for asset "3b263c2ad043fd069ef446753788c36e595c82b51a70478e58258c8ef7471671"
+  AssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03S3Bucket17F51109:
+    Type: String
+    Description: S3 bucket for asset "5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03"
+  AssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03S3VersionKeyAFA9FFD9:
+    Type: String
+    Description: S3 key for asset version "5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03"
+  AssetParameters5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03ArtifactHashEB7AD0AC:
+    Type: String
+    Description: Artifact hash for asset "5a0165b80474734eff290897da1c8d571862f020eeaac2561c839386159c7f03"
+  AssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7S3BucketA63AAFCE:
+    Type: String
+    Description: S3 bucket for asset "b14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7"
+  AssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7S3VersionKeyA43C529C:
+    Type: String
+    Description: S3 key for asset version "b14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7"
+  AssetParametersb14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7ArtifactHash7BABD15B:
+    Type: String
+    Description: Artifact hash for asset "b14f22ff44fc1ac311678056b99400bca2e33662c277015ce8f2fa18813738d7"
+  AssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedS3Bucket83B8778F:
+    Type: String
+    Description: S3 bucket for asset "c6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffed"
+  AssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedS3VersionKeyADF6A055:
+    Type: String
+    Description: S3 key for asset version "c6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffed"
+  AssetParametersc6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffedArtifactHash2C972BAF:
+    Type: String
+    Description: Artifact hash for asset "c6964dbf0c556ec82ce09622e99ad6f6d4e488cdaac0ef9e8492e078ec61ffed"
+  AssetParameters37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459aS3Bucket8B55D7C9:
+    Type: String
+    Description: S3 bucket for asset "37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459a"
+  AssetParameters37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459aS3VersionKey056464CA:
+    Type: String
+    Description: S3 key for asset version "37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459a"
+  AssetParameters37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459aArtifactHashB730B863:
+    Type: String
+    Description: Artifact hash for asset "37b958d72693954d28c264fe09a13d6813ba66cb501926441d8aa592a923459a"
+  AssetParameters4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8faS3BucketBDF53B2D:
+    Type: String
+    Description: S3 bucket for asset "4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8fa"
+  AssetParameters4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8faS3VersionKey840C0EAC:
+    Type: String
+    Description: S3 key for asset version "4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8fa"
+  AssetParameters4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8faArtifactHashED6FE042:
+    Type: String
+    Description: Artifact hash for asset "4bb3c91f0a389640166792537a0feb5557715eaf9537400e4c0f81cc02fea8fa"
+  AssetParameters8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0S3BucketB6BD9BF6:
+    Type: String
+    Description: S3 bucket for asset "8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0"
+  AssetParameters8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0S3VersionKeyF534098A:
+    Type: String
+    Description: S3 key for asset version "8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0"
+  AssetParameters8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0ArtifactHash4E029FDA:
+    Type: String
+    Description: Artifact hash for asset "8ecd9f4c636fdb056d9a91b159905d32545179649951e0bc137a597cc06aaeb0"
+  AssetParameters37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5S3Bucket99073B2B:
+    Type: String
+    Description: S3 bucket for asset "37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5"
+  AssetParameters37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5S3VersionKeyADBC0937:
+    Type: String
+    Description: S3 key for asset version "37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5"
+  AssetParameters37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5ArtifactHash283E0931:
+    Type: String
+    Description: Artifact hash for asset "37932129d52ad498036614979b9326071a08eb77c87f7d20931ff0b6ceeb64a5"

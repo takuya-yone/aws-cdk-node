@@ -1,7 +1,5 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
-import * as rds from '@aws-cdk/aws-rds';
-import * as lambda from '@aws-cdk/aws-lambda';
 import { Role, ServicePrincipal, ManagedPolicy } from '@aws-cdk/aws-iam';
 import * as eks from '@aws-cdk/aws-eks';
 
@@ -29,7 +27,7 @@ export class AwsCdkNodeStack extends cdk.Stack {
 
     //////////////////  Security Group //////////////////
 
-    const proxyIP1 = '0.0.0.0/32';
+    const proxyIP1 = '180.147.109.184/32';
     // const proxyIP2 = '0.0.0.0/32';
 
     //// public security group
@@ -120,23 +118,45 @@ export class AwsCdkNodeStack extends cdk.Stack {
     const cluster = new eks.Cluster(this, 'EKS-Sandbox-cluster', {
       vpc: vpc,
       mastersRole: eksRole,
-      clusterName: 'EKS-Sandbox',
+      clusterName: 'EKS-Sandbox-cluster',
       endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE,
       // mastersRole: clusterAdmin,
       vpcSubnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
 
       version: eks.KubernetesVersion.V1_21,
+
+      albController: {
+        version: eks.AlbControllerVersion.V2_4_1,
+      },
       defaultCapacity: 0,
     });
 
-    cluster.addNodegroupCapacity('EKS-Sandbox-ng', {
-      instanceTypes: [new ec2.InstanceType('t3.small')],
-      minSize: 2,
-      maxSize: 2,
-      diskSize: 10,
+    const nodegroup = new eks.Nodegroup(this, 'EKS-Sandbox-NodeGroup', {
+      cluster: cluster,
       amiType: eks.NodegroupAmiType.BOTTLEROCKET_X86_64,
-      subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+      capacityType: eks.CapacityType.ON_DEMAND,
+      forceUpdate: false,
+      instanceTypes: [new ec2.InstanceType('t3.small')],
+      maxSize: 2,
+      minSize: 2,
+      nodegroupName: 'EKS-Sandbox-NodeGroup',
+      subnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+      tags: {
+        Name: 'EKS-Sandbox-Node',
+      },
     });
+
+    // cluster.addNodegroupCapacity('EKS-Sandbox-ng', {
+    //   instanceTypes: [new ec2.InstanceType('t3.small')],
+    //   minSize: 2,
+    //   maxSize: 2,
+    //   // diskSize: 20,
+    //   tags: {Name:'EKS-Sandbox-Instance'},
+    //   amiType: eks.NodegroupAmiType.BOTTLEROCKET_X86_64,
+    //   subnets: { subnetType: ec2.SubnetType.PRIVATE_ISOLATED },
+    // });
 
     ////////////////// Private Subnet Group for RDS //////////////////
 
