@@ -87,40 +87,6 @@ export class EksClusterStack extends cdk.Stack {
       cluster: cluster,
     });
 
-    // // クラスター自身のIAMをマップ
-    // awsAuth.addRoleMapping(nodegroup.role, {
-    //   groups: ['system:bootstrappers', 'system:nodes'],
-    //   username: 'system:node:{{EC2PrivateDNSName}}',
-    // });
 
-    // clusterの管理権限をマップ
-    // awsAuth.addMastersRole(
-    //   Role.fromRoleArn(this, 'clusterAdminAtAwsAuth', EksMasterRole.roleArn),
-    //   EksMasterRole.roleName
-    // );
-
-    awsAuth.addMastersRole(
-      Role.fromRoleArn(
-        this,
-        'clusterAdminAtAwsAuth',
-        'arn:aws:iam::151268123722:role/aws-reserved/sso.amazonaws.com/ap-northeast-1/AWSReservedSSO_AdministratorAccess_15d1ce5925bae01a'
-      ),
-      'AWSReservedSSO_AdministratorAccess_15d1ce5925bae01a'
-    );
-
-    // const userName = "AWSReservedSSO_AdministratorAccess_15d1ce5925bae01a"
-    // awsAuth.addUserMapping(User.fromUserName(this, userName, userName), {
-    //   username: userName,
-    //   groups: ["system:masters"]
-    // });
-
-    // awsAuth.addMastersRole(
-    //   Role.fromRoleArn(
-    //     this,
-    //     'clusterAdminAtAwsAuth',
-    //     'arn:aws:iam::151268123722:role/AdministratorAccess'
-    //   ),
-    //   'AdministratorAccess'
-    // );
   }
 }

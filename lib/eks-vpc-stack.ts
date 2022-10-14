@@ -32,7 +32,7 @@ export class EksVpcStack extends cdk.Stack {
 
     // //////////////////  Security Group //////////////////
 
-    const proxyIP1 = '180.147.109.184/32';
+    const proxyIP1 = '0.0.0.0/32';
     // const proxyIP2 = '0.0.0.0/32';
 
     //// public security group
