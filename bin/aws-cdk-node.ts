@@ -12,4 +12,6 @@ const envOsaka = { region: 'ap-northeast-3' };
 const VpcStack = new EksVpcStack(app, 'EKS-Sandbox-VPC-Stack', {
   env: envTokyo,
 });
+
+// console.log(VpcStack.vpc)
 // const ClusterStack = new EksClusterStack(app, 'EKS-Sandbox-Cluster-Stack',VpcStack.vpc, { env: envTokyo });

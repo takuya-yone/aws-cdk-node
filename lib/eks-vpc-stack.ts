@@ -4,14 +4,14 @@ import { Role, ServicePrincipal, ManagedPolicy } from '@aws-cdk/aws-iam';
 import * as eks from '@aws-cdk/aws-eks';
 
 export class EksVpcStack extends cdk.Stack {
-  public readonly vpc: ec2.Vpc;
+  vpc: ec2.Vpc;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const vpcCidr = '10.0.0.0/16';
 
-    const vpc = new ec2.Vpc(this, 'EKS-Sandbox-VPC', {
+    this.vpc = new ec2.Vpc(this, 'EKS-Sandbox-VPC', {
       cidr: vpcCidr,
       natGateways: 0,
       subnetConfiguration: [
@@ -35,14 +35,14 @@ export class EksVpcStack extends cdk.Stack {
 
     //// public security group
     const publicSecurityGroup = new ec2.SecurityGroup(this, 'PublicSG', {
-      vpc: vpc,
+      vpc: this.vpc,
       allowAllOutbound: true,
       securityGroupName: 'PublicSG',
     });
 
     //// private security group
     const privateSecurityGroup = new ec2.SecurityGroup(this, 'PrivateSG', {
-      vpc: vpc,
+      vpc: this.vpc,
       allowAllOutbound: true,
       securityGroupName: 'PrivateSG',
     });
@@ -72,7 +72,7 @@ export class EksVpcStack extends cdk.Stack {
     );
     ////////////////// ////////////////// //////////////////
 
-    const EC2InterfaceEndpoint = vpc.addInterfaceEndpoint(
+    const EC2InterfaceEndpoint = this.vpc.addInterfaceEndpoint(
       'EC2InterfaceEndpoint',
       {
         service: ec2.InterfaceVpcEndpointAwsService.EC2,
@@ -81,7 +81,7 @@ export class EksVpcStack extends cdk.Stack {
       }
     );
 
-    const ECRInterfaceEndpoint = vpc.addInterfaceEndpoint(
+    const ECRInterfaceEndpoint = this.vpc.addInterfaceEndpoint(
       'ECRInterfaceEndpoint',
       {
         service: ec2.InterfaceVpcEndpointAwsService.ECR,
@@ -90,7 +90,7 @@ export class EksVpcStack extends cdk.Stack {
       }
     );
 
-    const ECRDockerInterfaceEndpoint = vpc.addInterfaceEndpoint(
+    const ECRDockerInterfaceEndpoint = this.vpc.addInterfaceEndpoint(
       'ECRDockerInterfaceEndpoint',
       {
         service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
@@ -99,7 +99,7 @@ export class EksVpcStack extends cdk.Stack {
       }
     );
 
-    const S3GatewayEndpoint = vpc.addGatewayEndpoint('S3GatewayEndpoint', {
+    const S3GatewayEndpoint = this.vpc.addGatewayEndpoint('S3GatewayEndpoint', {
       service: ec2.GatewayVpcEndpointAwsService.S3,
       subnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
     });
