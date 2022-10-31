@@ -13,7 +13,7 @@ export class EksVpcStack extends cdk.Stack {
 
     const vpcCidr = '10.0.0.0/16';
 
-    this.vpc = new ec2.Vpc(this, 'EKS-Sandbox-VPC', {
+    this.vpc = new ec2.Vpc(this, 'Sandbox-VPC', {
       cidr: vpcCidr,
       natGateways: 0,
       subnetConfiguration: [
