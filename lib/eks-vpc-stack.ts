@@ -62,10 +62,10 @@ export class EksVpcStack extends cdk.Stack {
       this.privateSecurityGroup,
       ec2.Port.allTraffic()
     );
-    this.publicSecurityGroup.addIngressRule(
-      ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
-      ec2.Port.allTraffic()
-    );
+    // this.publicSecurityGroup.addIngressRule(
+    //   ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+    //   ec2.Port.allTraffic()
+    // );
 
     //// private security group Rule
     this.privateSecurityGroup.addIngressRule(
@@ -76,10 +76,10 @@ export class EksVpcStack extends cdk.Stack {
       this.publicSecurityGroup,
       ec2.Port.allTraffic()
     );
-     this.privateSecurityGroup.addIngressRule(
-        ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
-        ec2.Port.allTraffic()
-      );
+    //  this.privateSecurityGroup.addIngressRule(
+    //     ec2.Peer.ipv4(this.vpc.vpcCidrBlock),
+    //     ec2.Port.allTraffic()
+    //   );
 
     ////////////////// ////////////////// //////////////////
 

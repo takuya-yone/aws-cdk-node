@@ -37,7 +37,6 @@ export class EksClusterStack extends cdk.Stack {
       ],
       securityGroup: publicSecurityGroup,
 
-
       version: eks.KubernetesVersion.V1_21,
 
       defaultCapacity: 0,
@@ -86,7 +85,5 @@ export class EksClusterStack extends cdk.Stack {
     const awsAuth = new eks.AwsAuth(this, 'AwsAuth', {
       cluster: cluster,
     });
-
-
   }
 }
