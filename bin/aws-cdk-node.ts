@@ -14,11 +14,11 @@ const VpcStack = new EksVpcStack(app, 'EKS-Sandbox-VPC-Stack', {
 });
 
 // console.log(VpcStack.vpc)
-const ClusterStack = new EksClusterStack(
-  app,
-  'EKS-Sandbox-Cluster-Stack',
-  VpcStack.vpc,
-  VpcStack.publicSecurityGroup,
-  VpcStack.privateSecurityGroup,
-  { env: envTokyo }
-);
+// const ClusterStack = new EksClusterStack(
+//   app,
+//   'EKS-Sandbox-Cluster-Stack',
+//   VpcStack.vpc,
+//   VpcStack.publicSecurityGroup,
+//   VpcStack.privateSecurityGroup,
+//   { env: envTokyo }
+// );
